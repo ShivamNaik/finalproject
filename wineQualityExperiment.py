@@ -7,10 +7,14 @@ from sklearn.preprocessing import StandardScaler
 import time
 # http://archive.ics.uci.edu/ml/datasets/Poker+Hand
 def LoadData():
-    f = open("poker-hand-testing.txt")
+    f = open("winequality-white.csv")
     pokerhands = []
+    i = 0
     for line in f:
-        splitline = line.split(",")
+        if(i == 0):
+            i+=1 #skip the first line
+            continue
+        splitline = line.split(";")
         pokerhands.append(map(int, map(str.strip, splitline)))
     f.close()
     return pokerhands
