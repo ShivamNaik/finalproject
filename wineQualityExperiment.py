@@ -5,7 +5,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 
 import time
-# http://archive.ics.uci.edu/ml/datasets/Poker+Hand
+# https://archive.ics.uci.edu/ml/datasets/Wine+Quality
 def LoadData():
     f = open("winequality-white.csv")
     pokerhands = []
