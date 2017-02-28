@@ -1,18 +1,15 @@
-from sklearn.cluster import DBSCAN
 
 import numpy as np
 import matplotlib.pyplot as plt
 import math
 from sklearn.cluster import DBSCAN
-from sklearn import metrics
-from sklearn.datasets.samples_generator import make_blobs
 from sklearn.preprocessing import StandardScaler
 
 
 NOTVISITED = -2
 NOISE = -1
 
-class dbscan:
+class myDBSCAN:
 
     def dist(self, point_a, point_b):
         sum = 0
@@ -60,7 +57,7 @@ def test_dbscan():
     X = [[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]]
     eps = 0.5
     min_points = 2
-    dbscanalgo = dbscan()
+    dbscanalgo = myDBSCAN()
     dbscanalgo.dbscan(X, eps, min_points)
 
     X = StandardScaler().fit_transform(X)
@@ -92,5 +89,5 @@ def test_dbscan():
     plt.title('Estimated number of clusters: %d' % n_clusters_)
     plt.show()
 
-test_dbscan()
+#test_dbscan()
 
