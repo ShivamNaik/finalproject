@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-NOTVISITED = -1
+NOTVISITED = -2
 NOISE = -1
 
 class dbscan:
@@ -12,6 +12,7 @@ class dbscan:
         sum = 0
         for i in xrange(len(point_a)):
             sum += (math.pow(point_a[i]-point_b[i], 2))
+            print (math.pow(point_a[i]-point_b[i], 2))
         return math.sqrt(sum)
 
     def regionQuery(self, dataMatrix, pointIndex, eps):
@@ -28,7 +29,7 @@ class dbscan:
             if(clusters[neighbors_iter] < 0): #if its not visited or noise
                 clusters[neighbors_iter] = clusterIndex
                 neighbors_2 = self.regionQuery(dataMatrix, neighbors_iter, eps)
-                if(len(neighbors_2) > minPoints):
+                if(len(neighbors_2) >= minPoints):
                     neighbors.extend(neighbors_2)
 
 
@@ -51,7 +52,7 @@ class dbscan:
 
 
 def test_dbscan():
-    m = [[1, 1.1], [1.2, .8], [.8, 1], [3.7, 3], [3.9, 4.9], [3.6, 4.1],[10,10]]
+    m = [[1, 1.1], [1.2, .8], [.8, 1], [3.7, 3.5], [3.9, 3.9], [3.4, 4.0],[15,15]]
     eps = 0.5
     min_points = 2
     dbscanalgo = dbscan()
