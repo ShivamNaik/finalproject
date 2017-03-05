@@ -34,6 +34,7 @@ def runAggClustering(X, cluster_level = 1):
     return clusters
 
 def plotAggClustering(title, dataMatrix, clusterLevel = 1):
+
     clusters = runAggClustering(dataMatrix, clusterLevel)
     colors = plt.cm.Spectral(np.linspace(0, 1, len(clusters)))
     # need to know how to color things
@@ -51,10 +52,8 @@ def plotAggClustering(title, dataMatrix, clusterLevel = 1):
     plt.show()
     return clusters
 
-test = [[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]]
-
-plotAggClustering("test", test)
-
-plotAggClustering("test2", test, 2)
-
-plotAggClustering("test3", test, 3)
+def testHAC():
+    test = [[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]]
+    plotAggClustering("test", test)
+    plotAggClustering("test2", test, 2)
+    plotAggClustering("test3", test, 3)

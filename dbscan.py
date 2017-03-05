@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import datetime
 
 
 NOTVISITED = -2
@@ -56,8 +57,13 @@ class myDBSCAN:
                 mask[index] = True
         return mask
 
-    def plot_dbscan(self, title, dataMatrix, eps, minPoints):
+    def plot_dbscan(self,dataMatrix, eps, minPoints, title=""):
+        start = datetime.datetime.now()
+        print start
+
         clusters = self.run_dbscan(dataMatrix, eps, minPoints)
+        end = datetime.datetime.now()
+        print "start, end, end-start", start, end, end-start
         unique_cluster_id = set(clusters)
         colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_cluster_id)))
         # need to know how to color things
