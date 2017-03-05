@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import datetime
 
 class aggloClustering:
     def calculateDistance(self, sample_a, sample_b):
@@ -34,11 +35,13 @@ class aggloClustering:
             self.mergeClusters(clusters, indicies[0], indicies[1])
         return clusters
 
-    def plotAggClustering(self, title, dataMatrix, clusterLevel = 1):
-
+    def plotAggClustering(self, title, dataMatrix, show = False, clusterLevel = 1):
+        start = datetime.datetime.now()
         clusters = self.runAggClustering(dataMatrix, clusterLevel)
+        end = datetime.datetime.now()
+        print "start, end, end-start", start, end, end - start
+
         colors = plt.cm.Spectral(np.linspace(0, 1, len(clusters)))
-        # need to know how to color things
         colorCombo = dict(zip(xrange(len(clusters)), colors))
         for i in xrange(len(clusters)):
             color = colorCombo[i]
@@ -48,8 +51,11 @@ class aggloClustering:
 
                 plt.plot(dataMatrix[cluster_ind][0], dataMatrix[cluster_ind][1], 'o', markerfacecolor=color,
                      markeredgecolor='k', markersize=14)
-        #plt.savefig('Agglomerative Clustering: ' + title)
-        plt.title('Agglomerative Clustering: ' + title)
+        title = 'Agglomerative Clustering: ' + title
+        plt.title(title)
+        plt.savefig(title)
+        if not show:
+            return clusters
         plt.show()
         return clusters
 
