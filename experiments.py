@@ -6,15 +6,15 @@ class ExperimentData:
     dorothea = []
     dataSets = []
 
-    def LoadData(self, fileName, splitVal, limit = False, limitNum = 5000):
+    def LoadData(self, fileName, splitVal, dtype=float, limit=False, limitNum = 5000):
         f = open(fileName)
         data = []
         limitIter = 0
         for line in f:
-            if(limit & limitNum > limitIter):
+            if(limit & (limitIter > limitNum)):
                 break
             splitline = line.split(splitVal)
-            data.append(map(int, map(str.strip, splitline)))
+            data.append(map(lambda x: dtype(0) if x is '' else dtype(x), map(str.strip, splitline)))
             limitIter+=1
         f.close()
         return data
@@ -53,10 +53,12 @@ class ExperimentData:
             modeNucleobase.append(nucleoList)
         return modeNucleobase
 
-    def init(self, limit=False, limitNum=5000):
+    def __init__(self, limit=False, limitNum=5000):
+        self.limit = limit
+        self.limitNum = limitNum
         self.genome = self.LoadGenomeData()
-        self.wine = self.LoadData("winequality-white.csv", ";")
-        self.poker = self.LoadData("poker-hand-testing.txt", ",")
-        self.dotaTest = self.LoadData("dota2Test.txt", ",")
-        self.dorothea = self.LoadData("dorothea_valid", " ")
+        self.wine = self.LoadData("winequality-white.csv", ";", limit=self.limit, limitNum=self.limitNum)
+        self.poker = self.LoadData("poker-hand-testing.txt", ",", int, limit=self.limit, limitNum=self.limitNum)
+        self.dotaTest = self.LoadData("dota2Test.csv", ",", limit=self.limit, limitNum=self.limitNum)
+        self.dorothea = self.LoadData("dorothea_valid.txt", " ", int, limit=self.limit, limitNum=self.limitNum)
         self.dataSets = [self.wine, self.poker, self.dotaTest, self.dorothea]
