@@ -59,6 +59,7 @@ class myDBSCAN:
         return mask
 
     def plot_dbscan(self,dataMatrix, eps, minPoints, title="", show=False):
+        print "plot_dbscan"
         start = datetime.datetime.now()
         clusters = self.run_dbscan(dataMatrix, eps, minPoints)
         end = datetime.datetime.now()
@@ -86,7 +87,9 @@ class myDBSCAN:
         plt.show()
         return clusters
 
-    def scikitDbScan(self, X, eps, min_points, plot=True):
+    def scikitDbScan(self, X, eps, min_points, title="", show=False):
+        print "scikitDbScan"
+
         start = datetime.datetime.now()
 
         print start
@@ -94,7 +97,6 @@ class myDBSCAN:
         db = DBSCAN(eps=eps, min_samples=min_points).fit(X)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end - start
-
 
         core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask[db.core_sample_indices_] = True
@@ -115,10 +117,11 @@ class myDBSCAN:
             xy = X[class_member_mask & ~core_samples_mask]
             plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
                      markeredgecolor='k', markersize=6)
-        n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 
-        plt.title('Estimated number of clusters: %d' % n_clusters_)
-        if (not plot):
+        title = 'DBSCAN Clustering: ' + title
+        plt.title(title)
+        plt.savefig(title)
+        if (not show):
             return
         plt.show()
 

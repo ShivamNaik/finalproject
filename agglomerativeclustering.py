@@ -36,6 +36,8 @@ class aggloClustering:
         return clusters
 
     def plotAggClustering(self, title, dataMatrix, show = False, clusterLevel = 1):
+        print "plotAggClustering"
+
         start = datetime.datetime.now()
         clusters = self.runAggClustering(dataMatrix, clusterLevel)
         end = datetime.datetime.now()
