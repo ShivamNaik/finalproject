@@ -71,7 +71,7 @@ class myDBSCAN:
             plt.plot(dataMatrix[i][0], dataMatrix[i][1], 'o', markerfacecolor=color,
                      markeredgecolor='k', markersize=14)
 
-        n_clusters = len(set(clusters)) - (1 if -1 in clusters else 0)
+        #plt.savefig('DBSCAN Clustering: ' + title)
         plt.title('DBSCAN Clustering: ' + title)
         plt.show()
         return clusters
