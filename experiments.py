@@ -1,3 +1,8 @@
+
+from sklearn.decomposition import PCA, IncrementalPCA
+from dbscan import DBSCAN
+from hac import HAC
+
 class ExperimentData:
     genome = []
     wine = []
@@ -14,7 +19,7 @@ class ExperimentData:
             if(limit & (limitIter > limitNum)):
                 break
             splitline = line.split(splitVal)
-            data.append(map(lambda x: dtype(0) if x is '' else dtype(x), map(str.strip, splitline)))
+            data.append(map(float,(map(lambda x: dtype(0) if x is '' else dtype(x), map(str.strip, splitline)))))
             limitIter+=1
         f.close()
         return data
@@ -61,4 +66,25 @@ class ExperimentData:
         self.poker = self.LoadData("poker-hand-testing.txt", ",", int, limit=self.limit, limitNum=self.limitNum)
         self.dotaTest = self.LoadData("dota2Test.csv", ",", limit=self.limit, limitNum=self.limitNum)
         self.dorothea = self.LoadData("dorothea_valid.txt", " ", int, limit=self.limit, limitNum=self.limitNum)
-        self.dataSets = [self.wine, self.poker, self.dotaTest, self.dorothea]
+        #   self.dataSets = [self.wine, self.poker, self.dotaTest, self.dorothea]
+        self.dataSets = [self.wine, self.poker, self.dotaTest]
+        self.labels = ["Wine Quality Data Set", "Poker Hand Data Set", "Dota Data Set", "Dorothea Data Set"]
+
+class Experiments:
+    def run(self, algorithm, limit=False, limitNum=5000, dimension=5):
+        experimentData = ExperimentData(limit, limitNum)
+
+        for i in xrange(len(experimentData.dataSets)):
+            print experimentData.labels[i]
+            print "Not PCA"
+
+            algorithm.run(experimentData.dataSets[i], experimentData.labels[i])
+            print "PCA"
+            pca = PCA(n_components=dimension)
+            algorithm.run(pca.fit_transform(experimentData.dataSets[i]), experimentData.labels[i])
+
+dbscan = DBSCAN()
+hac = HAC()
+experiment = Experiments()
+experiment.run(dbscan, True, 100, 2)
+experiment.run(hac, True, 100, 2)

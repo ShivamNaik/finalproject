@@ -9,7 +9,13 @@ from sklearn.cluster import DBSCAN
 NOTVISITED = -2
 NOISE = -1
 
-class myDBSCAN:
+class DBSCAN:
+    minPoints = 0
+    eps = 0
+
+    def __init__(self, eps=5, min_points=5):
+        self.eps = eps
+        self.min_points = min_points
 
     def dist(self, point_a, point_b):
         sum = 0
@@ -58,10 +64,10 @@ class myDBSCAN:
                 mask[index] = True
         return mask
 
-    def plot_dbscan(self,dataMatrix, eps, minPoints, title="", show=False):
+    def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
         print "plot_dbscan"
         start = datetime.datetime.now()
-        clusters = self.run_dbscan(dataMatrix, eps, minPoints)
+        clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end-start
 
@@ -80,7 +86,7 @@ class myDBSCAN:
 
         title = 'DBSCAN Clustering: ' + title
         plt.title(title)
-        plt.savefig(title)
+        plt.savefig("figure/" + title)
         if (not show):
             return clusters
 
@@ -120,7 +126,7 @@ class myDBSCAN:
 
         title = 'DBSCAN Clustering: ' + title
         plt.title(title)
-        plt.savefig(title)
+        plt.savefig("figure/" + title)
         if (not show):
             return
         plt.show()
@@ -129,7 +135,7 @@ def test_dbscan():
     X = np.array([[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]])
     eps = 0.5
     min_points = 2
-    dbscanalgo = myDBSCAN()
+    dbscanalgo = DBSCAN()
     dbscanalgo.plot_dbscan(X, eps, min_points)
 
 

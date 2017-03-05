@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import math
 import datetime
 
-class aggloClustering:
+class HAC:
+    clusterLevel = 0
+
     def calculateDistance(self, sample_a, sample_b):
         sum = 0
         for i in xrange(len(sample_a)):
@@ -35,11 +37,14 @@ class aggloClustering:
             self.mergeClusters(clusters, indicies[0], indicies[1])
         return clusters
 
-    def plotAggClustering(self, title, dataMatrix, show = False, clusterLevel = 1):
+    def _init(self, clusterLevel = 3):
+        self.clusterLevel = clusterLevel
+
+    def run(self, dataMatrix, title="", show=False):  # need to figure out how to automate this
         print "plotAggClustering"
 
         start = datetime.datetime.now()
-        clusters = self.runAggClustering(dataMatrix, clusterLevel)
+        clusters = self.runAggClustering(dataMatrix, self.clusterLevel)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end - start
 
@@ -55,7 +60,7 @@ class aggloClustering:
                      markeredgecolor='k', markersize=14)
         title = 'Agglomerative Clustering: ' + title
         plt.title(title)
-        plt.savefig(title)
+        plt.savefig("figure/" + title)
         if not show:
             return clusters
         plt.show()
