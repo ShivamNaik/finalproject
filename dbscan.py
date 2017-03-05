@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import datetime
-
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import DBSCAN
 
 NOTVISITED = -2
 NOISE = -1
@@ -30,7 +31,7 @@ class myDBSCAN:
             if(clusters[neighbors_iter] < 0): #if its not visited or noise
                 clusters[neighbors_iter] = clusterIndex
                 neighbors_2 = self.regionQuery(dataMatrix, neighbors_iter, eps)
-                if(len(neighbors_2) >= minPoints):
+                if(len(neighbors_2) > minPoints):
                     neighbors.extend(neighbors_2)
 
 
@@ -57,13 +58,16 @@ class myDBSCAN:
                 mask[index] = True
         return mask
 
-    def plot_dbscan(self,dataMatrix, eps, minPoints, title=""):
+    def plot_dbscan(self,dataMatrix, eps, minPoints, title="", plot=True):
         start = datetime.datetime.now()
         print start
 
         clusters = self.run_dbscan(dataMatrix, eps, minPoints)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end-start
+        if (not plot):
+            return
+
         unique_cluster_id = set(clusters)
         colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_cluster_id)))
         # need to know how to color things
@@ -82,7 +86,44 @@ class myDBSCAN:
         plt.show()
         return clusters
 
+    def scikitDbScan(self, X, eps, min_points, plot=True):
+        start = datetime.datetime.now()
 
+        print start
+
+        X = StandardScaler().fit_transform(X)
+        db = DBSCAN(eps=eps, min_samples=min_points).fit(X)
+        end = datetime.datetime.now()
+        print "start, end, end-start", start, end, end - start
+
+        if(not plot):
+            return
+        core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+        core_samples_mask[db.core_sample_indices_] = True
+
+        labels = db.labels_
+        unique_labels = set(labels)
+        colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+        print labels
+        print colors
+        print core_samples_mask
+        for k, col in zip(unique_labels, colors):
+            if k == -1:
+                # Black used for noise.
+                col = 'k'
+
+            class_member_mask = (labels == k)
+            xy = X[class_member_mask & core_samples_mask]
+            plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
+                     markeredgecolor='k', markersize=14)
+
+            xy = X[class_member_mask & ~core_samples_mask]
+            plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
+                     markeredgecolor='k', markersize=6)
+        n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+
+        plt.title('Estimated number of clusters: %d' % n_clusters_)
+        plt.show()
 
 def test_dbscan():
     X = np.array([[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]])
