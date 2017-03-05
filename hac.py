@@ -4,7 +4,7 @@ import math
 import datetime
 
 class HAC:
-    clusterLevel = 0
+    clusterLevel = 1
 
     def calculateDistance(self, sample_a, sample_b):
         sum = 0
@@ -37,7 +37,7 @@ class HAC:
             self.mergeClusters(clusters, indicies[0], indicies[1])
         return clusters
 
-    def _init(self, clusterLevel = 3):
+    def __init__(self, clusterLevel = 1):
         self.clusterLevel = clusterLevel
 
     def run(self, dataMatrix, title="", show=False):  # need to figure out how to automate this
@@ -61,6 +61,8 @@ class HAC:
         title = 'Agglomerative Clustering: ' + title
         plt.title(title)
         plt.savefig("figure/" + title)
+        plt.clf()
+        plt.close('all')
         if not show:
             return clusters
         plt.show()

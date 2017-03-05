@@ -87,6 +87,8 @@ class DBSCAN:
         title = 'DBSCAN Clustering: ' + title
         plt.title(title)
         plt.savefig("figure/" + title)
+        plt.clf()
+        plt.close('all')
         if (not show):
             return clusters
 
@@ -131,12 +133,7 @@ class DBSCAN:
             return
         plt.show()
 
-def test_dbscan():
-    X = np.array([[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]])
-    eps = 0.5
-    min_points = 2
-    dbscanalgo = DBSCAN()
-    dbscanalgo.plot_dbscan(X, eps, min_points)
+
 
 
 
