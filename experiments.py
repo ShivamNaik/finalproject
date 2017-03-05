@@ -1,6 +1,5 @@
 class ExperimentData:
     genome = []
-    dotaTrain = []
     wine = []
     poker = []
     dotaTest = []
@@ -56,7 +55,6 @@ class ExperimentData:
 
     def init(self, limit=False, limitNum=5000):
         self.genome = self.LoadGenomeData()
-        self.dotaTrain = self.LoadData("dota2Train.txt", ",")  # this ones huge
         self.wine = self.LoadData("winequality-white.csv", ";")
         self.poker = self.LoadData("poker-hand-testing.txt", ",")
         self.dotaTest = self.LoadData("dota2Test.txt", ",")
