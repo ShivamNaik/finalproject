@@ -1,3 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
 import math
 
 def calculateDistance(sample_a, sample_b):
@@ -29,6 +31,22 @@ def runAggClustering(X, cluster_level = 1):
                             indicies = (i,j)
 
         mergeClusters(clusters, indicies[0], indicies[1])
+    return clusters
 
-def plotAggClustering(X, cluster_level):
-    print "i"
+def plotAggClustering(title, dataMatrix, clusterLevel = 1):
+    clusters = runAggClustering(dataMatrix, clusterLevel)
+    unique_cluster_id = set(clusters)
+    colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_cluster_id)))
+    # need to know how to color things
+    colorCombo = dict(zip(unique_cluster_id, colors))
+    for i in xrange(len(clusters)):
+        for j in xrange(len(clusters[i])):
+            cluster_ind = clusters[i][j]
+            color = colorCombo[cluster_ind]
+
+            plt.plot(dataMatrix[cluster_ind][0], dataMatrix[cluster_ind][1], 'o', markerfacecolor=color,
+                 markeredgecolor='k', markersize=14)
+
+    plt.title('Agglomerative Clustering: ' + title)
+    plt.show()
+    return clusters

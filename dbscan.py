@@ -56,7 +56,7 @@ class myDBSCAN:
                 mask[index] = True
         return mask
 
-    def plot_dbscan(self, dataMatrix, eps, minPoints):
+    def plot_dbscan(self, title, dataMatrix, eps, minPoints):
         clusters = self.run_dbscan(dataMatrix, eps, minPoints)
         unique_cluster_id = set(clusters)
         colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_cluster_id)))
@@ -67,13 +67,12 @@ class myDBSCAN:
             color = colorCombo[cluster_ind]
             if cluster_ind == -1:
                 color = 'black'
-                print cluster_ind
 
             plt.plot(dataMatrix[i][0], dataMatrix[i][1], 'o', markerfacecolor=color,
                      markeredgecolor='k', markersize=14)
 
         n_clusters = len(set(clusters)) - (1 if -1 in clusters else 0)
-        plt.title('Estimated number of clusters: %d' % n_clusters)
+        plt.title('DBSCAN Clustering: ' + title)
         plt.show()
         return clusters
 
