@@ -1,4 +1,12 @@
 class ExperimentData:
+    genome = []
+    dotaTrain = []
+    wine = []
+    poker = []
+    dotaTest = []
+    dorothea = []
+    dataSets = []
+
     def LoadData(self, fileName, splitVal, limit = False, limitNum = 5000):
         f = open(fileName)
         data = []
@@ -46,10 +54,11 @@ class ExperimentData:
             modeNucleobase.append(nucleoList)
         return modeNucleobase
 
-    genome = LoadGenomeData()
-    wine = LoadData("winequality-white.csv", ";")
-    poker = LoadData("poker-hand-testing.txt",",")
-    dotaTest = LoadData("dota2Test.txt", ",")
-    dotaTrain = LoadData("dota2Train.txt", ",")
-    dorothea = LoadData("dorothea_valid", " ")
-
+    def init(self, limit=False, limitNum=5000):
+        self.genome = self.LoadGenomeData()
+        self.dotaTrain = self.LoadData("dota2Train.txt", ",")  # this ones huge
+        self.wine = self.LoadData("winequality-white.csv", ";")
+        self.poker = self.LoadData("poker-hand-testing.txt", ",")
+        self.dotaTest = self.LoadData("dota2Test.txt", ",")
+        self.dorothea = self.LoadData("dorothea_valid", " ")
+        self.dataSets = [self.wine, self.poker, self.dotaTest, self.dorothea]
