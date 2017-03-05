@@ -1,4 +1,4 @@
-class Experiments:
+class ExperimentData:
     def LoadData(self, fileName, splitVal, limit = False, limitNum = 5000):
         f = open(fileName)
         data = []
