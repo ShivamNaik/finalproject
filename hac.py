@@ -50,7 +50,6 @@ class HAC:
         print "start, end, end-start", start, end, end - start
 
         with open("timing.txt", "a") as target:
-            target = open("timing", 'a')
             newline = "\n"
             target.write(title + newline)
             target.write(str(start)+ newline)

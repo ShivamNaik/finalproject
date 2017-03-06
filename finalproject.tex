@@ -102,6 +102,16 @@ Here, $a_k$ again represents the first principal component vector found using PC
 
 
 
+\textbf{DBScan}
+
+DBScan stands for  Density-Based Algorithm for Discovering Clusters and was proposed by Martin Ester, Hans-Peter Kriegel, Jiirg Sander, Xiaowei Xu in 1996. The algorithm tries to find different clusters in the data based on two main parameters which are epsilon, the threshold for distance between two points, and min points, which is the threshold for minimum number of points required for a cluster. The samples from the dataset are classified in the clusters under 3 types of points: core points, border points, and noise points. Core points are within the epsilon of a center point, border points lie on the edges and can be flipped  to either of the close clusters, and noise points, which don’t belong to any clusters. The clusters are created by finding points closest to each other. We start with one point and find all the clusters closest to it and then find all the points closest to that cluster.
+
+The algorithm:
+We have a list of cluster id’s which is how we keep track of which sample belongs to which cluster. We go through each point and if it hasn’t been classified yet, then we “ExpandCluster”. Expand points starts by checking to see whether the current sample has at least min points number of neighbors by checking to see if the distance between the two samples is less than epsilon. If it fails to have enough neighbors with a short distance, all points are marked as NOISE. Otherwise, it goes through all the neighbors and finds all the points that it can reach to swallow into this its cluster by marking all cluster id’s as the same.
+
+How to determine eps:
+Find the k nearest(for our purposes 3) points and get the distance. Sort all distances and set the eps to the midway point. Will keep min points set to 4 according to the paper even though our data has a higher dimension than 2.
+
 \item Datasets Used
 
 \item Performance

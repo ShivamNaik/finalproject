@@ -75,8 +75,8 @@ class ExperimentData:
 
 class Experiments:
     def run(self, algorithm, limit=False, limitNum=5000, dimension=5):
-        with open("timing", "a") as target:
-            target = open("timing", 'a')
+        with open("timing.txt", "a") as target:
+            target = open("timing.txt", 'a')
             for i in xrange(10):
                 target.write("\n")
 
@@ -139,7 +139,7 @@ def test_DBSCAN():
     dbscanalgo = DBSCAN(eps=eps, min_points=min_points)
     dbscanalgo.run(X, "Synthetic Data")
 
-def teset_HAC():
+def test_HAC():
     test = [[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]]
     hac = HAC()
     for i in xrange(1,4):
@@ -147,17 +147,18 @@ def teset_HAC():
         hac.run(test, "Synthetic Data with Cluster Level " + str(i))
 
 test_DBSCAN()
-teset_HAC()
 
 dbscan = DBSCAN()
 hac = HAC()
 experiment = Experiments()
 
 experiment.runSynthetic(dbscan)
-experiment.runSynthetic(hac)
 
-# ind = 500
-# dim = 3
-# experiment.run(dbscan, True, ind, dim)
+ind = 500
+dim = 3
+experiment.run(dbscan, True, ind, dim)
+
+# test_HAC()
+# experiment.runSynthetic(hac)
 # experiment.run(hac, True, ind, dim)
 

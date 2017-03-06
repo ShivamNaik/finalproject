@@ -85,8 +85,7 @@ class DBSCAN:
         clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end-start
-        with open("timing", "a") as target:
-            target = open("timing", 'a')
+        with open("timing_corinne", "a") as target:
             newline = "\n"
             target.write(title + newline)
             target.write(str(start)+ newline)
