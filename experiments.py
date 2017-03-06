@@ -75,6 +75,11 @@ class ExperimentData:
 
 class Experiments:
     def run(self, algorithm, limit=False, limitNum=5000, dimension=5):
+        with open("timing", "a") as target:
+            target = open("timing", 'a')
+            for i in xrange(10):
+                target.write("\n")
+
         experimentData = ExperimentData(limit, limitNum)
 
         algorithm.run(experimentData.wine, "Wine Quality Data Set")
@@ -96,6 +101,10 @@ class Experiments:
         print "done"
 
     def runSynthetic(self, algorithm):
+        with open("timing", "a") as target:
+            target = open("timing", 'a')
+            for i in xrange(10):
+                target.write("\n")
         dbscan = DBSCAN(min_points=13)
         hac = HAC()
 
@@ -147,8 +156,8 @@ experiment = Experiments()
 experiment.runSynthetic(dbscan)
 experiment.runSynthetic(hac)
 
-ind = 500
-dim = 3
-experiment.run(dbscan, True, ind, dim)
-experiment.run(hac, True, ind, dim)
+# ind = 500
+# dim = 3
+# experiment.run(dbscan, True, ind, dim)
+# experiment.run(hac, True, ind, dim)
 

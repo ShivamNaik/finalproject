@@ -16,7 +16,7 @@ class DBSCAN:
     eps = 0
     calcEps = True
 
-    def __init__(self, calcEps = True, eps=0, min_points=5):
+    def __init__(self, calcEps = True, eps=0, min_points=4):
         self.eps = eps
         self.calcEps = calcEps
         self.min_points = min_points
@@ -44,7 +44,6 @@ class DBSCAN:
                 if(len(neighbors_2) > minPoints):
                     neighbors.extend(neighbors_2)
 
-
     def run_dbscan(self, dataMatrix, eps, minPoints):
         clusterIndex = 0
         clusters = [NOTVISITED] * len(dataMatrix)
@@ -54,9 +53,11 @@ class DBSCAN:
                 continue
             neighbors = self.regionQuery(dataMatrix, i, eps)
             if(len(neighbors) < minPoints):
+                for i in neighbors:
+                    clusters[i] = NOISE
                 continue
             else:
-                self.expandCluster(dataMatrix, eps, minPoints, clusters, i, clusterIndex)
+                self.expandCluster(dataMatrix, neighbors, eps, minPoints, clusters, i, clusterIndex)
                 clusterIndex+=1
         return clusters
 
