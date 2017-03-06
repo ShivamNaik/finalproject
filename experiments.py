@@ -102,6 +102,10 @@ def teset_HAC():
         hac.clusterLevel = i
         hac.run(test, "Synthetic Data with Cluster Level " + str(i))
 
+hac = HAC()
+
+experimentdata = ExperimentData(limit = True, limitNum=600)
+hac.run(experimentdata.arrhythmia, "arryth test")
 test_DBSCAN()
 teset_HAC()
 
