@@ -66,7 +66,7 @@ class HAC:
                 cluster_ind = clusters[i][j]
 
                 plt.plot(dataMatrix[cluster_ind][0], dataMatrix[cluster_ind][1], 'o', markerfacecolor=color,
-                     markeredgecolor='k', markersize=14)
+                     markeredgecolor='k', markersize=6)
         plt.title(title)
         plt.savefig("figure/" + title)
         plt.clf()

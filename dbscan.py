@@ -30,15 +30,15 @@ class DBSCAN:
     def regionQuery(self, dataMatrix, pointIndex, eps):
         neighbors = []
         for i in xrange(len(dataMatrix)):
-            if (self.dist(dataMatrix[i], dataMatrix[pointIndex]) < eps):
+            if (self.dist(dataMatrix[i], dataMatrix[pointIndex]) <= eps):
                 neighbors.append(i)
+        neighbors.remove(pointIndex)
         return neighbors
 
-    def expandCluster(self, dataMatrix, eps, minPoints, clusters, pointIndex, clusterIndex):
+    def expandCluster(self, dataMatrix, neighbors, eps, minPoints, clusters, pointIndex, clusterIndex):
         clusters[pointIndex] = clusterIndex
-        neighbors = self.regionQuery(dataMatrix, pointIndex, eps)
         for neighbors_iter in neighbors:
-            if(clusters[neighbors_iter] < 0): #if its not visited or noise
+            if(clusters[neighbors_iter] < 0):
                 clusters[neighbors_iter] = clusterIndex
                 neighbors_2 = self.regionQuery(dataMatrix, neighbors_iter, eps)
                 if(len(neighbors_2) > minPoints):
@@ -54,10 +54,10 @@ class DBSCAN:
                 continue
             neighbors = self.regionQuery(dataMatrix, i, eps)
             if(len(neighbors) < minPoints):
-                clusters[i] = NOISE
+                continue
             else:
                 self.expandCluster(dataMatrix, eps, minPoints, clusters, i, clusterIndex)
-            clusterIndex+=1
+                clusterIndex+=1
         return clusters
 
     def getMask(self, indexVal, array):
@@ -73,7 +73,7 @@ class DBSCAN:
         neigh.fit(dataMatrix)
         kNearestDist =  (neigh.kneighbors(dataMatrix, 3, return_distance=True)[0]).flatten()
         sortedDistance = sorted(kNearestDist[kNearestDist != 0])
-        return sortedDistance[len(sortedDistance)/2+1]
+        return sortedDistance[len(sortedDistance)*3/4]
 
     def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
         title = 'DBSCAN Clustering ' + title
@@ -84,7 +84,7 @@ class DBSCAN:
         clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end-start
-        with open("timing.txt", "a") as target:
+        with open("timing", "a") as target:
             target = open("timing", 'a')
             newline = "\n"
             target.write(title + newline)
@@ -99,11 +99,11 @@ class DBSCAN:
         for i in xrange(len(clusters)):
             cluster_ind = clusters[i]
             color = colorCombo[cluster_ind]
-            if cluster_ind == -1:
+            if cluster_ind == NOISE:
                 color = 'black'
 
             plt.plot(dataMatrix[i][0], dataMatrix[i][1], 'o', markerfacecolor=color,
-                     markeredgecolor='k', markersize=14)
+                     markeredgecolor='k', markersize=6)
 
         plt.title(title)
         plt.savefig("figure/" + title)

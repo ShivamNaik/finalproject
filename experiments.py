@@ -3,6 +3,9 @@ from sklearn.decomposition import PCA, IncrementalPCA
 from dbscan import DBSCAN
 from hac import HAC
 import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.datasets import make_blobs
+from sklearn.datasets import make_gaussian_quantiles
 
 class ExperimentData:
     genome = []
@@ -82,15 +85,43 @@ class Experiments:
         pca = PCA(n_components=dimension)
         algorithm.run(pca.fit_transform(experimentData.poker), "Poker Data Set PCA")
 
-        algorithm.run(experimentData.dotaTest, "Dota Test Data Set")
-        pca = PCA(n_components=dimension)
-        algorithm.run(pca.fit_transform(experimentData.dotaTest), "Dota Test Data Set PCA")
-
         algorithm.run(experimentData.arrhythmia, "Arrhythmia Data Set")
         pca = PCA(n_components=dimension)
         algorithm.run(pca.fit_transform(experimentData.dotaTest), "Arrhythmia Data Set PCA")
 
+        algorithm.run(experimentData.dotaTest, "Dota Test Data Set")
+        pca = PCA(n_components=dimension)
+        algorithm.run(pca.fit_transform(experimentData.dotaTest), "Dota Test Data Set PCA")
+
         print "done"
+
+    def runSynthetic(self, algorithm):
+        dbscan = DBSCAN(min_points=13)
+        hac = HAC()
+
+        X1, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
+        X2, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
+
+        dbscan.run(X1, "1")
+        hac.run(X2, "1")
+        X1, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
+        X2, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
+
+        dbscan.run(X1, "2")
+        hac.run(X2, "2")
+
+        X1, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
+                                     n_clusters_per_class=1, n_classes=3)
+        X2, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
+                                     n_clusters_per_class=1, n_classes=3)
+        dbscan.run(X1, "3")
+        hac.run(X2, "3")
+        X1, Y1 = make_blobs(n_features=2, centers=3)
+        X2, Y1 = make_blobs(n_features=2, centers=3)
+
+        dbscan.run(X1, "4")
+        hac.run(X2, "4")
+
 
 def test_DBSCAN():
     X = np.array([[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]])
@@ -102,7 +133,7 @@ def test_DBSCAN():
 def teset_HAC():
     test = [[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]]
     hac = HAC()
-    for i in xrange(3):
+    for i in xrange(1,4):
         hac.clusterLevel = i + 1
         hac.run(test, "Synthetic Data with Cluster Level " + str(i))
 
@@ -112,7 +143,11 @@ teset_HAC()
 dbscan = DBSCAN()
 hac = HAC()
 experiment = Experiments()
-ind = 750
+
+experiment.runSynthetic(dbscan)
+experiment.runSynthetic(hac)
+
+ind = 500
 dim = 3
 experiment.run(dbscan, True, ind, dim)
 experiment.run(hac, True, ind, dim)
