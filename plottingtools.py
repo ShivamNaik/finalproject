@@ -68,21 +68,33 @@ def syntheticDataLineSphere():
 
 def syntheticDataLine():
     points2 = []
-    start2 = [5, 0, 0]
+    start2 = [8, 8, -3]
     for i in range(50):
-        start2[0] += 0.5
-        start2[1] += 0.5
-        start2[2] -= 0.1
+        start2[0] += 0.4
+        start2[1] += 0.4
+        start2[2] -= 0.05
         points2.append([start2[0], start2[1], start2[2]])
     return np.array(points2)
 
 def syntheticDataSphere():
-    z = 2 * np.random.rand(400) - 1
+    z = (2 * np.random.rand(400) - 1)
     t = 2 * np.pi * np.random.rand(400)
-    x = np.sqrt(1 - z**2) * np.cos(t)
-    y = np.sqrt(1 - z**2) * np.sin(t)
-    sphere = zip(x, y, z)
+    x = 5*(np.sqrt(1 - z**2) * np.cos(t))
+    y = 5*(np.sqrt(1 - z**2) * np.sin(t))
+    sphere = zip(x, y, 5*z)
     return np.array(sphere)
+
+def syntheticPlane():
+    points = []
+    start = [15, 15, 4]
+    for i in range(400):
+        point = list(start)
+        point[0] += 30*np.random.rand()
+        point[1] += 30*np.random.rand()
+        point[2] = 0.1*point[0]
+        #points.append([point[1], point[0], point[2]])
+        points.append([point[0], point[1], point[2]])
+    return np.array(points)
 
 def plotDataList(dataset):
     fig = plt.figure()
@@ -98,4 +110,21 @@ def plotDataList(dataset):
         y = data[:,1]
         z = data[:,2]
         ax.scatter(x,y,z)
+    ax.set_aspect("equal")
     plt.show()
+
+def lineSphere():
+    line = syntheticDataLine()
+    sphere = syntheticDataSphere()
+    plotDataList([line, sphere])
+
+def linePlane():
+    line = syntheticDataLine()
+    plane = syntheticPlane()
+    plotDataList([line, plane])
+
+def linePlaneSphere():
+    line = syntheticDataLine()
+    sphere = syntheticDataSphere()
+    plane = syntheticPlane()
+    plotDataList([line, plane, sphere])
