@@ -124,6 +124,96 @@ For the purposes of our paper, we focused on agglomerative instead of divisive. 
 The Algorithm:
 The algorithm starts by assigning a cluster id to each sample. We go through each of the clusters, which starts as an array of length N of one dimensional arrays consisting of the assigned cluster id. Once we find the min distance, we combine merge the second sample’s cluster id into the array holding the first sample’s cluster id. We keep doing this until we hit the max cluster level which we provide. This is a little tweak from the ful hierarchical clustering algorithm which stops when all the samples are in one cluster.
 
+\begin{verbatim}
+
+    def regionQuery(self, dataMatrix, pointIndex, eps):
+        neighbors = []
+        for i in xrange(len(dataMatrix)):
+            if (self.dist(dataMatrix[i], dataMatrix[pointIndex]) <= eps):
+                neighbors.append(i)
+        neighbors.remove(pointIndex)
+        return neighbors
+
+    def expandCluster(self, dataMatrix, neighbors, eps, minPoints, clusters, pointIndex, clusterIndex):
+        clusters[pointIndex] = clusterIndex
+        for neighbors_iter in neighbors:
+            if(clusters[neighbors_iter] < 0):
+                clusters[neighbors_iter] = clusterIndex
+                neighbors_2 = self.regionQuery(dataMatrix, neighbors_iter, eps)
+                if(len(neighbors_2) > minPoints):
+                    neighbors.extend(neighbors_2)
+
+    def calculateEps(self, dataMatrix):
+        neigh = NearestNeighbors(5, 1)
+        neigh.fit(dataMatrix)
+        kNearestDist =  (neigh.kneighbors(dataMatrix, 3, return_distance=True)[0]).flatten()
+        sortedDistance = sorted(kNearestDist[kNearestDist != 0])
+        return sortedDistance[len(sortedDistance)/2]
+
+    def run_dbscan(self, dataMatrix, eps, minPoints):
+        clusterIndex = 0
+        clusters = [NOTVISITED] * len(dataMatrix)
+
+        for i in xrange(len(dataMatrix)):
+            if clusters[i] >= 0:
+                continue
+            neighbors = self.regionQuery(dataMatrix, i, eps)
+            if(len(neighbors) < minPoints):
+                for i in neighbors:
+                    clusters[i] = NOISE
+                continue
+            else:
+                self.expandCluster(dataMatrix, neighbors, eps, minPoints, clusters, i, clusterIndex)
+                clusterIndex+=1
+        return clusters
+
+\end{verbatim}
+
+\textbf{Single Link Hierarchical Clustering}
+
+Hierarchical clustering algorithms are used to cluster samples in a hierarchy leading to a dendrogram. Hierarchical clustering algorithms can either be agglomerative or divisive. Agglomerative Hierarchical Clustering starts by bucketing each sample in its own cluster and then merging two samples based on distance. Divisive Hierarchical Clustering starts by having all the samples in one cluster and splitting off the farthest sample in each step until each sample is in its own bucket.
+
+For the purposes of our paper, we focused on agglomerative instead of divisive.  There are a few ways in which agglomerative clustering calculates which samples belong in a cluster together. They include complete linkage, single linkage, and average linkage. In complete linkage, the maximum between a sample from cluster a and cluster b is kept. Once largest maximum is calculated across all combinations of clusters, the two clusters are combined. In single linkage, the minimum between two points of two clusters is kept and the two clusters with the minimum distance from all combinations are combined. In average linkage, the average distance across all the points in each cluster is calculated and the clusters with the mean distance are combined. For the purposes of our project, we will use Single Linkage Hierarchical Clustering.
+
+The Algorithm:
+The algorithm starts by assigning a cluster id to each sample. We go through each of the clusters, which starts as an array of length N of one dimensional arrays consisting of the assigned cluster id. Once we find the min distance, we combine merge the second sample’s cluster id into the array holding the first sample’s cluster id. We keep doing this until we hit the max cluster level which we provide. This is a little tweak from the ful hierarchical clustering algorithm which stops when all the samples are in one cluster.
+
+
+\begin{verbatim}
+
+    def calculateDistance(self, sample_a, sample_b):
+        sum = 0
+        for i in xrange(len(sample_a)):
+            sum += (math.pow(sample_a[i]-sample_b[i], 2))
+        return math.sqrt(sum)
+
+    def mergeClusters(self, clusters, index_1, index_2):
+        clusters[index_1].extend(clusters[index_2])
+        del clusters[index_2]
+        return clusters
+
+    def runAggClustering(self, X, cluster_level = 1):
+        clusters = [[index] for index in range(0, len(X))]
+        while(len(clusters) > cluster_level):
+            indicies = (-1, -1)
+            minDistance = float("Inf")
+
+            for i in xrange(len(clusters)):
+                for j in xrange(i+1, len(clusters)):
+                    if(i==j):
+                        continue
+                    for index_i in clusters[i]:
+                        for index_j in clusters[j]:
+                            distance = self.calculateDistance(X[index_i], X[index_j])
+                            if(distance < minDistance):
+                                minDistance = distance
+                                indicies = (i,j)
+
+            self.mergeClusters(clusters, indicies[0], indicies[1])
+        return clusters
+
+\end{verbatim}
+
 \item Datasets Used
 
 \item Performance
