@@ -84,6 +84,13 @@ class DBSCAN:
         clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end-start
+        with open("timing.txt", "a") as target:
+            target = open("timing", 'a')
+            newline = "\n"
+            target.write(title + newline)
+            target.write(str(start)+ newline)
+            target.write(str(end)+ newline)
+            target.write(str(end - start)+ newline)
 
         unique_cluster_id = set(clusters)
         colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_cluster_id)))
