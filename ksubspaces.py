@@ -3,17 +3,20 @@ from sklearn.decomposition import PCA, IncrementalPCA
 from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.utils import gen_batches
-import matplotlib.pyplot as plt
 from numpy import bincount
 from sklearn.preprocessing import scale
 from experiments import *
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.cm as cm
+from plottingtools import *
 
 # eta should be between 0.2 and 0.5
 eta = 0.35
 
 class KSubspaces:
 
-    def __init__(self, n_clusters=8, n_init=5,
+    def __init__(self, n_clusters=8, n_init=3,
                  max_iter=300, tol=1e-4):
 
         self.n_clusters = n_clusters
@@ -60,29 +63,7 @@ def sphereDistance(x, ck, eta, ak, bk, variance):
     v = np.subtract(x, ck)
     dist = np.dot(v, v)
     final = dist-(eta*variance)
-    return max(0, final)
-
-#def linedist2(point, center, eucdist, alpha):
-
-def getalpha(diff, ak):
-    return np.dot(diff.T,ak)
-
-def line2(diff, ak):
-    alpha = getalpha(diff, ak)
-    a = np.dot(alpha, ak)
-    v = np.subtract(diff, a)
-    return np.dot(v, v)
-
-def line3(eucdist, point, center, ak):
-    diff = np.subtract(point, center)
-    alpha = np.dot(diff.T,ak)
-    al = np.dot(alpha, ak)
-    v = eucdist
-    v -= (2*np.dot(point, al))
-    v +=(2*np.dot(center, al))
-    v += np.dot(al, al)
-    return v
-    
+    return max(0, final)  
     
 def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
     norms = xsquarednorms.reshape(-1,1)
@@ -123,7 +104,6 @@ def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
             #linedist1 = eucdist-np.dot(point, aterm)-np.dot(aterm,point)+np.dot(aterm, center)+np.dot(center, aterm)+np.dot(aterm, aterm)
             #planedist = linedist - (2*np.dot(point, beta)) + (2*np.dot(center, beta)) + (2*np.dot(alpha, beta)) + np.dot(beta, beta)
             variance = variances[center_idx]
-            #linedist3 = line3(eucdist, point, center, ak)
             #if linedist1 < 0:
             #    raise ValueError("Negative")
             #spheredist = max(0, (eucdist - eta*variance))
@@ -133,7 +113,7 @@ def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
             spheredist2 = sphereDistance(point, center, eta, ak, bk, variance)
             if spheredist2==0:
                 spheredist2 = np.infty
-            #print "line", linedist1, linedist3
+            #print "line", linedist1, linedist2
             #print "plane", planedist, planedist2
             #print "sphere", spheredist, spheredist2
             ##
@@ -149,100 +129,6 @@ def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
 
     #print labels[:1000], inertia
     return inertia            
-            
-        
-##    for cluster in clusters:
-##        
-##        
-##    indices = np.empty(X.shape[0], dtype=np.intp)
-##    
-##    values = np.empty((X.shape[0],3))
-##    values.fill(np.infty)
-##
-##    dotval = np.dot(X, Y)
-##    euc = 
-##    
-##
-##    min_indices = d_chunk.argmin(axis=1)
-##    min_values = d_chunk[:, min_indices]
-##    
-##    bestmukey, dist = min([(i[0], np.linalg.norm(x-mu[i[0]])) \
-##                    for i in enumerate(mu)], key=lambda t:t[1])[0]
-
-##def eucdist(X, Y, x_squared_norms, y_squared_norms):
-##    dist = 0.0
-##    # hardcoded: minimize euclidean distance to cluster center:
-##    # ||a - b||^2 = ||a||^2 + ||b||^2 -2 <a, b>
-##    dist += np.dot(point, center)
-##    dist *= -2
-##    dist += np.dot(center, center)
-##    dist += np.dot(point, point)
-##    return dist
-
-def findParams(X, n_samples, centers, n_clusters, labels):
-    variances = [0] * n_clusters
-    aks = [0] * n_clusters
-    bks = [0] * n_clusters
-
-    datapoints_per_cluster = [[] for i in range(n_clusters)]
-    for idx in range(n_samples):
-        point = X[idx]
-        label = labels[idx]
-        if label==-1:
-            return variances, aks, bks
-        center = centers[label]
-        datapoints_per_cluster[label].append(point)
-        dist = np.subtract(point, center)
-        variances[label] += (np.dot(dist, dist))
-
-    #print datapoints_per_cluster
-    for cluster_idx in range(n_clusters):
-        cluster = datapoints_per_cluster[cluster_idx]
-        if len(cluster):
-            cluster_std = scale(cluster)
-            pca = PCA(n_components=2).fit(cluster_std)
-            aks[cluster_idx] = pca.components_[0]
-            if len(pca.components_) > 1:
-                bks[cluster_idx] = pca.components_[1]
-    return variances, aks, bks
-
-def determinedistfuncs(X, n_samples, centers, n_clusters, labels, variances, aks, bks):
-    clineDispersions =  np.empty(n_clusters, dtype=X.dtype)
-    cplaneDispersions = np.empty(n_clusters, dtype=X.dtype)
-    csphereDispersions = np.empty(n_clusters, dtype=X.dtype)
-    
-    for idx in range(n_samples):
-        point = X[idx]
-        label = labels[idx]
-        if label==-1:
-            return [eucdist] * n_clusters
-        center = centers[label]
-        lineDist = lineDistance(point, center, eta, aks[label], bks[label], variances[label])
-        # line dispersion per cluster
-        clineDispersions[label] += lineDist
-        planeDist = planeDistance(point, center, eta, aks[label], bks[label], variances[label])
-        cplaneDispersions[label] += planeDist
-        sphereDist = sphereDistance(point, center, eta, aks[label], bks[label], variances[label])
-        csphereDispersions[label] += sphereDist
-        #eucDist = eucdist(point, center, eta, aks[label], bks[label], variances[label])
-        #print "dists", lineDist, planeDist#, sphereDist, eucDist
-    print "Plane dispersions", cplaneDispersions
-    print "Line dispersions", clineDispersions
-    
-
-# csphereDispersions[center_idx]]
-    distfunclist = [0] * n_clusters
-    for center_idx in range(n_clusters):
-        minimum = np.argmin([clineDispersions[center_idx], cplaneDispersions[center_idx]])
-        print minimum
-        if minimum==0:
-            distfunclist[center_idx] = lineDistance
-        elif minimum==1:
-            distfunclist[center_idx] = planeDistance
-        #else:
-            #distfunclist[center_idx] = sphereDistance
-      
-    return distfunclist
 
 def squarednorms(X):
     return (X**2).sum(axis=1)
@@ -380,41 +266,6 @@ def _labels_inertia(X, x_squared_norms, centers, distances):
     inertia = pairwise_distances(X, centers, x_squared_norms, y_squared_norms, labels, distances)
     return labels, inertia
 
-
-def _assign_labels_array(X, n_clusters, x_squared_norms, centers, labels, distances):
-    n_samples = X.shape[0]
-    if n_samples == distances.shape[0]:
-        store_distances = 1
-    else:
-        store_distances = 0
-
-    #center_squared_norms = [np.dot(x,x) for x in centers]
-    
-    # for each cluster, find which model has lowest dispersion
-    variances, aks, bks = findParams(X, n_samples, centers, n_clusters, labels)
-    distfunclist = determinedistfuncs(X, n_samples, centers, n_clusters, labels, variances, aks, bks)
-    print "Distance functions:", distfunclist
-    
-    inertia = 0.0
-    # for each cluster, choose model assignment and use that for distance
-    for idx in range(n_samples):
-        min_dist = -1
-        point = X[idx]
-        for center_idx in range(n_clusters):
-            center = centers[center_idx]
-            distfunc = distfunclist[center_idx]
-            dist = distfunc(point, center, eta, aks[center_idx], bks[center_idx], variances[center_idx])
-            if min_dist == -1 or dist < min_dist:
-                min_dist = dist
-                labels[idx] = center_idx
-
-        if store_distances:
-            distances[idx] = min_dist
-        inertia += min_dist
-
-    #print labels
-    return inertia
-
 def k_subspaces(X, n_clusters, n_init, max_iter, tol=1e-4):
     n_samples = X.shape[0]
     x_squared_norms = squarednorms(X)
@@ -435,29 +286,74 @@ def k_subspaces(X, n_clusters, n_init, max_iter, tol=1e-4):
                 
     return best_centers, best_labels, best_inertia, best_n_iter
 
+def plot(xs, ys, zs):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.scatter(xs, ys, zs)
+    plt.show()
+    
+def syntheticData2Lines():
+    xs1 = []
+    ys1 = []
+    zs1 = []
+    points1 = []
+    start1 = [15, 5, 1]
+    for i in range(50):
+        idx = 1
+        start1[idx] += 1
+        xs1.append(start1[0])
+        ys1.append(start1[1])
+        zs1.append(start1[2])
+        points1.append([start1[0], start1[1], start1[2]])
+        
+    xs2 = []
+    ys2 = []
+    zs2 = []
+    points2 = []
+    start2 = [5, 0, 0]
+    for i in range(50):
+        start2[0] += 0.5
+        start2[1] += 0.5
+        start2[2] -= 0.1
+        xs2.append(start2[0])
+        ys2.append(start2[1])
+        zs2.append(start2[2])
+        points2.append([start2[0], start2[1], start2[2]])
 
-#X = np.array([[1, 2], [1, 4], [1, 0], [4, 2], [4, 4], [4, 0]])
-#ksub = KSubspaces(n_clusters=2).fit(X)
-#best_centers, best_labels, best_inertia = k_subspaces(X, n_clusters=2)
+    l = points1
+    l.extend(points2)
+    #plot2(xs1, ys1, zs1, xs2, ys2, zs2)
+    return np.array(l)
 
-#pokerhands = np.array(LoadData())
-##print "Data loaded"
-##ksub = KSubspaces(n_clusters=6).fit(pokerhands)
-##print "Labels"
-##print ksub.labels_
-##print "Cluster centers"
-##print ksub.cluster_centers_
-##print "Inertia"
-##print ksub.inertia_
+def plot2(xs1, ys1, zs1, xs2, ys2, zs2):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.scatter(xs1, ys1, zs1, c='b')
+    ax.scatter(xs2, ys2, zs2, c='r')
+    plt.show()
 
-data = ExperimentData(limit=True, limitNum=5000)
-outcomes = []
-for i in range(3):
-    print "Dataset", i
-    dat = np.array(data.dataSets[i])
-    ksub = KSubspaces().fit(dat)
-    kmeans = KMeans().fit(dat)
-    ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
-    kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
-    print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
-    outcomes.append([ksubdata, kmeansdata])
+    
+##data = ExperimentData(limit=True, limitNum=5000)
+##outcomes = []
+##for i in range(3):
+##    print "Dataset", i
+##    dat = np.array(data.dataSets[i])
+##    ksub = KSubspaces().fit(dat)
+##    kmeans = KMeans().fit(dat)
+##    ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
+##    kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
+##    print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
+##    outcomes.append([ksubdata, kmeansdata])
+
+dat = syntheticData2Lines()
+ksub = KSubspaces(n_clusters=2).fit(dat)
+plotClusterData(dat, ksub.labels_, 2)
+kmeans = KMeans(n_clusters=2).fit(dat)
+plotClusterData(dat, kmeans.labels_, 2)
