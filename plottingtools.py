@@ -3,18 +3,23 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
-def plotClusterData(X, clusterLabels, n_clusters):
-    '''
+'''
 
     Usage Example:
     
-    from plottingtools import *
-    dat = syntheticData2Lines()
-    ksub = KSubspaces(n_clusters=2).fit(dat)
-    plotClusterData(dat, ksub.labels_, 2)
+    line = syntheticDataLine()
+    plane = syntheticPlane()
+    sphere = syntheticDataSphere()
+    n_clusters=3
+    dat = np.concatenate((line, plane, sphere))
+    ksub = KSubspaces(n_clusters=n_clusters, n_init=5).fit(dat)
+    plotClusterData(dat, ksub.labels_, n_clusters)
+    kmeans = KMeans(n_clusters=n_clusters).fit(dat)
+    plotClusterData(dat, kmeans.labels_, n_clusters)
     
-    '''
+'''
     
+def plotClusterData(X, clusterLabels, n_clusters):
     colors = iter(cm.rainbow(np.linspace(0, 1, n_clusters)))
     clusters = [[] for i in range(n_clusters)]
     n_samples = X.shape[0]
@@ -68,11 +73,11 @@ def syntheticDataLineSphere():
 
 def syntheticDataLine():
     points2 = []
-    start2 = [-50, -50, -80]
+    start2 = [-50, -50, -120]
     for i in range(50):
-        start2[0] += 7
-        start2[1] += 7
-        start2[2] += 1
+        start2[0] += 6
+        start2[1] += 6
+        start2[2] += 2
         points2.append([start2[0], start2[1], start2[2]])
     return np.array(points2)
 
@@ -86,12 +91,12 @@ def syntheticDataSphere():
 
 def syntheticPlane():
     points = []
-    start = [-10, -10, 40]
+    start = [-25, -25, 60]
     for i in range(400):
         point = list(start)
         point[0] += 240*np.random.rand()
         point[1] += 240*np.random.rand()
-        point[2] = 0.8*point[0]
+        point[2] = (0.8*point[0])+100
         #points.append([point[1], point[0], point[2]])
         points.append([point[0], point[1], point[2]])
     return np.array(points)
