@@ -5,6 +5,8 @@ import math
 import datetime
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
+
 
 NOTVISITED = -2
 NOISE = -1
@@ -12,9 +14,11 @@ NOISE = -1
 class DBSCAN:
     minPoints = 0
     eps = 0
+    calcEps = True
 
-    def __init__(self, eps=5, min_points=5):
+    def __init__(self, calcEps = True, eps=0, min_points=5):
         self.eps = eps
+        self.calcEps = calcEps
         self.min_points = min_points
 
     def dist(self, point_a, point_b):
@@ -64,18 +68,18 @@ class DBSCAN:
                 mask[index] = True
         return mask
 
-    def calculateSimilarity(self, dataMatrix):
-        n = len(dataMatrix)
-        sim = np.zeros((n,n))
-        for i in xrange(n):
-            for j in xrange(j+1):
-                n[i][j] = self.dist(dataMatrix[i], dataMatrix[j])
-
-
+    def calculateEps(self, dataMatrix):
+        neigh = NearestNeighbors(3, 1)
+        neigh.fit(dataMatrix)
+        kNearestDist =  (neigh.kneighbors(dataMatrix, 3, return_distance=True)[0]).flatten()
+        sortedDistance = sorted(kNearestDist[kNearestDist != 0])
+        return sortedDistance[len(sortedDistance)/2+1]
 
     def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
         title = 'DBSCAN Clustering ' + title
         print title
+        if(self.calcEps):
+            self.eps = self.calculateEps(dataMatrix)
         start = datetime.datetime.now()
         clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)
         end = datetime.datetime.now()
