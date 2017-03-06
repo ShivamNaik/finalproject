@@ -74,7 +74,7 @@ class DBSCAN:
 
 
     def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
-        title = 'DBSCAN Clustering: ' + title
+        title = 'DBSCAN Clustering ' + title
         print title
         start = datetime.datetime.now()
         clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)

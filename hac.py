@@ -41,7 +41,7 @@ class HAC:
         self.clusterLevel = clusterLevel
 
     def run(self, dataMatrix, title="", show=False):  # need to figure out how to automate this
-        title = 'Agglomerative Clustering: ' + title
+        title = 'Agglomerative Clustering ' + title
         print title
 
         start = datetime.datetime.now()
