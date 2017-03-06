@@ -44,7 +44,6 @@ class DBSCAN:
                 if(len(neighbors_2) > minPoints):
                     neighbors.extend(neighbors_2)
 
-
     def run_dbscan(self, dataMatrix, eps, minPoints):
         clusterIndex = 0
         clusters = [NOTVISITED] * len(dataMatrix)
