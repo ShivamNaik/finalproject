@@ -86,6 +86,10 @@ class Experiments:
         pca = PCA(n_components=dimension)
         algorithm.run(pca.fit_transform(experimentData.dotaTest), "Dota Test Data Set PCA")
 
+        algorithm.run(experimentData.arrhythmia, "Arrhythmia Data Set")
+        pca = PCA(n_components=dimension)
+        algorithm.run(pca.fit_transform(experimentData.dotaTest), "Arrhythmia Data Set PCA")
+
         print "done"
 
 def test_DBSCAN():
@@ -99,20 +103,17 @@ def teset_HAC():
     test = [[1, 1.1, 1], [1.2, .8, 1.1], [.8, 1, 1.2], [3.7, 3.5, 3.6], [3.9, 3.9, 3.5], [3.4, 3.5, 3.7],[15,15, 15]]
     hac = HAC()
     for i in xrange(3):
-        hac.clusterLevel = i
+        hac.clusterLevel = i + 1
         hac.run(test, "Synthetic Data with Cluster Level " + str(i))
 
-hac = HAC()
-
-experimentdata = ExperimentData(limit = True, limitNum=600)
-hac.run(experimentdata.arrhythmia, "arryth test")
 test_DBSCAN()
 teset_HAC()
 
 dbscan = DBSCAN()
 hac = HAC()
 experiment = Experiments()
-
-experiment.run(dbscan, True, 5000, 3)
-experiment.run(hac, True, 5000, 3)
+ind = 750
+dim = 3
+experiment.run(dbscan, True, ind, dim)
+experiment.run(hac, True, ind, dim)
 

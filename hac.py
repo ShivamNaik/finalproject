@@ -49,6 +49,14 @@ class HAC:
         end = datetime.datetime.now()
         print "start, end, end-start", start, end, end - start
 
+        with open("timing.txt", "a") as target:
+            target = open("timing", 'a')
+            newline = "\n"
+            target.write(title + newline)
+            target.write(str(start)+ newline)
+            target.write(str(end)+ newline)
+            target.write(str(end - start)+ newline)
+
         colors = plt.cm.Spectral(np.linspace(0, 1, len(clusters)))
         colorCombo = dict(zip(xrange(len(clusters)), colors))
         for i in xrange(len(clusters)):
