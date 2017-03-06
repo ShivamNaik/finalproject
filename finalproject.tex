@@ -115,6 +115,15 @@ We have a list of cluster id’s which is how we keep track of which sample belo
 How to determine eps:
 Find the k nearest(for our purposes 3) points and get the distance. Sort all distances and set the eps to the midway point. Will keep min points set to 4 according to the paper even though our data has a higher dimension than 2.
 
+\textbf{Single Link Hierarchical Clustering}
+
+Hierarchical clustering algorithms are used to cluster samples in a hierarchy leading to a dendrogram. Hierarchical clustering algorithms can either be agglomerative or divisive. Agglomerative Hierarchical Clustering starts by bucketing each sample in its own cluster and then merging two samples based on distance. Divisive Hierarchical Clustering starts by having all the samples in one cluster and splitting off the farthest sample in each step until each sample is in its own bucket.
+
+For the purposes of our paper, we focused on agglomerative instead of divisive.  There are a few ways in which agglomerative clustering calculates which samples belong in a cluster together. They include complete linkage, single linkage, and average linkage. In complete linkage, the maximum between a sample from cluster a and cluster b is kept. Once largest maximum is calculated across all combinations of clusters, the two clusters are combined. In single linkage, the minimum between two points of two clusters is kept and the two clusters with the minimum distance from all combinations are combined. In average linkage, the average distance across all the points in each cluster is calculated and the clusters with the mean distance are combined. For the purposes of our project, we will use Single Linkage Hierarchical Clustering.
+
+The Algorithm:
+The algorithm starts by assigning a cluster id to each sample. We go through each of the clusters, which starts as an array of length N of one dimensional arrays consisting of the assigned cluster id. Once we find the min distance, we combine merge the second sample’s cluster id into the array holding the first sample’s cluster id. We keep doing this until we hit the max cluster level which we provide. This is a little tweak from the ful hierarchical clustering algorithm which stops when all the samples are in one cluster.
+
 \item Datasets Used
 
 \item Performance
