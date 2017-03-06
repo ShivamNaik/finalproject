@@ -105,31 +105,31 @@ class Experiments:
             target = open("timing", 'a')
             for i in xrange(10):
                 target.write("\n")
-        dbscan = DBSCAN(min_points=13)
-        hac = HAC()
-
-        X1, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
-        X2, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
-
-        dbscan.run(X1, "1")
-        hac.run(X2, "1")
-        X1, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
-        X2, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
-
-        dbscan.run(X1, "2")
-        hac.run(X2, "2")
-
-        X1, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
-                                     n_clusters_per_class=1, n_classes=3)
-        X2, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
-                                     n_clusters_per_class=1, n_classes=3)
-        dbscan.run(X1, "3")
-        hac.run(X2, "3")
-        X1, Y1 = make_blobs(n_features=2, centers=3)
-        X2, Y1 = make_blobs(n_features=2, centers=3)
-
-        dbscan.run(X1, "4")
-        hac.run(X2, "4")
+        # dbscan = DBSCAN(min_points=13)
+        # hac = HAC()
+        #
+        # X1, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
+        # X2, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
+        #
+        # dbscan.run(X1, "1")
+        # hac.run(X2, "1")
+        # X1, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
+        # X2, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
+        #
+        # dbscan.run(X1, "2")
+        # hac.run(X2, "2")
+        #
+        # X1, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
+        #                              n_clusters_per_class=1, n_classes=3)
+        # X2, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
+        #                              n_clusters_per_class=1, n_classes=3)
+        # dbscan.run(X1, "3")
+        # hac.run(X2, "3")
+        # X1, Y1 = make_blobs(n_features=2, centers=3)
+        # X2, Y1 = make_blobs(n_features=2, centers=3)
+        #
+        # dbscan.run(X1, "4")
+        # hac.run(X2, "4")
 
 
 def test_DBSCAN():
@@ -146,7 +146,6 @@ def test_HAC():
         hac.clusterLevel = i + 1
         hac.run(test, "Synthetic Data with Cluster Level " + str(i))
 
-test_DBSCAN()
 
 dbscan = DBSCAN()
 hac = HAC()
@@ -156,7 +155,7 @@ experiment.runSynthetic(dbscan)
 
 ind = 500
 dim = 3
-experiment.run(dbscan, True, ind, dim)
+#experiment.run(dbscan, True, ind, dim)
 
 # test_HAC()
 # experiment.runSynthetic(hac)

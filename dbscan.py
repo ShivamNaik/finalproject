@@ -44,6 +44,13 @@ class DBSCAN:
                 if(len(neighbors_2) > minPoints):
                     neighbors.extend(neighbors_2)
 
+    def calculateEps(self, dataMatrix):
+        neigh = NearestNeighbors(5, 1)
+        neigh.fit(dataMatrix)
+        kNearestDist =  (neigh.kneighbors(dataMatrix, 3, return_distance=True)[0]).flatten()
+        sortedDistance = sorted(kNearestDist[kNearestDist != 0])
+        return sortedDistance[len(sortedDistance)/2]
+
     def run_dbscan(self, dataMatrix, eps, minPoints):
         clusterIndex = 0
         clusters = [NOTVISITED] * len(dataMatrix)
@@ -68,13 +75,6 @@ class DBSCAN:
             if(indexVal==i):
                 mask[index] = True
         return mask
-
-    def calculateEps(self, dataMatrix):
-        neigh = NearestNeighbors(3, 1)
-        neigh.fit(dataMatrix)
-        kNearestDist =  (neigh.kneighbors(dataMatrix, 3, return_distance=True)[0]).flatten()
-        sortedDistance = sorted(kNearestDist[kNearestDist != 0])
-        return sortedDistance[len(sortedDistance)*3/4]
 
     def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
         title = 'DBSCAN Clustering ' + title
