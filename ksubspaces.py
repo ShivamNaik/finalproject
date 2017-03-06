@@ -285,60 +285,6 @@ def k_subspaces(X, n_clusters, n_init, max_iter, tol=1e-4):
             best_n_iter = n_iter_
                 
     return best_centers, best_labels, best_inertia, best_n_iter
-
-def plot(xs, ys, zs):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
-    ax.scatter(xs, ys, zs)
-    plt.show()
-    
-def syntheticData2Lines():
-    xs1 = []
-    ys1 = []
-    zs1 = []
-    points1 = []
-    start1 = [15, 5, 1]
-    for i in range(50):
-        idx = 1
-        start1[idx] += 1
-        xs1.append(start1[0])
-        ys1.append(start1[1])
-        zs1.append(start1[2])
-        points1.append([start1[0], start1[1], start1[2]])
-        
-    xs2 = []
-    ys2 = []
-    zs2 = []
-    points2 = []
-    start2 = [5, 0, 0]
-    for i in range(50):
-        start2[0] += 0.5
-        start2[1] += 0.5
-        start2[2] -= 0.1
-        xs2.append(start2[0])
-        ys2.append(start2[1])
-        zs2.append(start2[2])
-        points2.append([start2[0], start2[1], start2[2]])
-
-    l = points1
-    l.extend(points2)
-    #plot2(xs1, ys1, zs1, xs2, ys2, zs2)
-    return np.array(l)
-
-def plot2(xs1, ys1, zs1, xs2, ys2, zs2):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
-    ax.scatter(xs1, ys1, zs1, c='b')
-    ax.scatter(xs2, ys2, zs2, c='r')
-    plt.show()
-
     
 ##data = ExperimentData(limit=True, limitNum=5000)
 ##outcomes = []
