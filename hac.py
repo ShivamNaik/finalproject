@@ -41,7 +41,8 @@ class HAC:
         self.clusterLevel = clusterLevel
 
     def run(self, dataMatrix, title="", show=False):  # need to figure out how to automate this
-        print "plotAggClustering"
+        title = 'Agglomerative Clustering: ' + title
+        print title
 
         start = datetime.datetime.now()
         clusters = self.runAggClustering(dataMatrix, self.clusterLevel)
@@ -58,7 +59,6 @@ class HAC:
 
                 plt.plot(dataMatrix[cluster_ind][0], dataMatrix[cluster_ind][1], 'o', markerfacecolor=color,
                      markeredgecolor='k', markersize=14)
-        title = 'Agglomerative Clustering: ' + title
         plt.title(title)
         plt.savefig("figure/" + title)
         plt.clf()

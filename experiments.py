@@ -107,6 +107,6 @@ dbscan = DBSCAN()
 hac = HAC()
 experiment = Experiments()
 
-experiment.run(dbscan, True, 300, 3)
-experiment.run(hac, True, 300, 3)
+experiment.run(dbscan, True, 5000, 3)
+experiment.run(hac, True, 5000, 3)
 

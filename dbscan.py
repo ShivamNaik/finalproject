@@ -64,8 +64,18 @@ class DBSCAN:
                 mask[index] = True
         return mask
 
+    def calculateSimilarity(self, dataMatrix):
+        n = len(dataMatrix)
+        sim = np.zeros((n,n))
+        for i in xrange(n):
+            for j in xrange(j+1):
+                n[i][j] = self.dist(dataMatrix[i], dataMatrix[j])
+
+
+
     def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
-        print "plot_dbscan"
+        title = 'DBSCAN Clustering: ' + title
+        print title
         start = datetime.datetime.now()
         clusters = self.run_dbscan(dataMatrix, self.eps, self.minPoints)
         end = datetime.datetime.now()
@@ -84,7 +94,6 @@ class DBSCAN:
             plt.plot(dataMatrix[i][0], dataMatrix[i][1], 'o', markerfacecolor=color,
                      markeredgecolor='k', markersize=14)
 
-        title = 'DBSCAN Clustering: ' + title
         plt.title(title)
         plt.savefig("figure/" + title)
         plt.clf()
