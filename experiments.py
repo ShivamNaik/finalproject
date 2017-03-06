@@ -65,7 +65,9 @@ class ExperimentData:
         self.wine = self.LoadData("winequality-white.csv", ";", limit=self.limit, limitNum=self.limitNum)
         self.poker = self.LoadData("poker-hand-testing.txt", ",", int, limit=self.limit, limitNum=self.limitNum)
         self.dotaTest = self.LoadData("dota2Test.csv", ",", limit=self.limit, limitNum=self.limitNum)
-        self.dataSets = [self.wine, self.poker, self.dotaTest]
+        self.arrhythmia = self.LoadData("arrhythmia.data", ",", limit=self.limit, limitNum=self.limitNum)
+
+        self.dataSets = [self.wine, self.poker, self.dotaTest, self.arrhythmia]
         self.labels = ["Wine Quality Data Set", "Poker Hand Data Set", "Dota Data Set"]
 
 class Experiments:
@@ -98,7 +100,7 @@ def teset_HAC():
     hac = HAC()
     for i in xrange(3):
         hac.clusterLevel = i
-        hac.run(test, "Synthetic Data with Cluster Level: " + str(i))
+        hac.run(test, "Synthetic Data with Cluster Level " + str(i))
 
 test_DBSCAN()
 teset_HAC()

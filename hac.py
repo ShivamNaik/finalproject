@@ -37,7 +37,7 @@ class HAC:
             self.mergeClusters(clusters, indicies[0], indicies[1])
         return clusters
 
-    def __init__(self, clusterLevel = 1):
+    def __init__(self, clusterLevel = 3):
         self.clusterLevel = clusterLevel
 
     def run(self, dataMatrix, title="", show=False):  # need to figure out how to automate this

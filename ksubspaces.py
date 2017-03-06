@@ -340,20 +340,20 @@ def plot2(xs1, ys1, zs1, xs2, ys2, zs2):
     plt.show()
 
     
-##data = ExperimentData(limit=True, limitNum=5000)
-##outcomes = []
-##for i in range(3):
-##    print "Dataset", i
-##    dat = np.array(data.dataSets[i])
-##    ksub = KSubspaces().fit(dat)
-##    kmeans = KMeans().fit(dat)
-##    ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
-##    kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
-##    print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
-##    outcomes.append([ksubdata, kmeansdata])
+data = ExperimentData(limit=True, limitNum=5000)
+outcomes = []
+for i in range(3):
+   print "Dataset", i
+   dat = np.array(data.dataSets[i])
+   ksub = KSubspaces().fit(dat)
+   kmeans = KMeans().fit(dat)
+   ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
+   kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
+   print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
+   outcomes.append([ksubdata, kmeansdata])
 
-dat = syntheticData2Lines()
-ksub = KSubspaces(n_clusters=2).fit(dat)
-plotClusterData(dat, ksub.labels_, 2)
-kmeans = KMeans(n_clusters=2).fit(dat)
-plotClusterData(dat, kmeans.labels_, 2)
+# dat = syntheticData2Lines()
+# ksub = KSubspaces(n_clusters=2).fit(dat)
+# plotClusterData(dat, ksub.labels_, 2)
+# kmeans = KMeans(n_clusters=2).fit(dat)
+# plotClusterData(dat, kmeans.labels_, 2)
