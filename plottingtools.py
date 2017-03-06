@@ -68,30 +68,30 @@ def syntheticDataLineSphere():
 
 def syntheticDataLine():
     points2 = []
-    start2 = [8, 8, -3]
+    start2 = [-50, -50, -80]
     for i in range(50):
-        start2[0] += 0.4
-        start2[1] += 0.4
-        start2[2] -= 0.05
+        start2[0] += 7
+        start2[1] += 7
+        start2[2] += 1
         points2.append([start2[0], start2[1], start2[2]])
     return np.array(points2)
 
 def syntheticDataSphere():
     z = (2 * np.random.rand(400) - 1)
     t = 2 * np.pi * np.random.rand(400)
-    x = 5*(np.sqrt(1 - z**2) * np.cos(t))
-    y = 5*(np.sqrt(1 - z**2) * np.sin(t))
-    sphere = zip(x, y, 5*z)
+    x = 40*(np.sqrt(1 - z**2) * np.cos(t))
+    y = 40*(np.sqrt(1 - z**2) * np.sin(t))
+    sphere = zip(x, y, 40*z)
     return np.array(sphere)
 
 def syntheticPlane():
     points = []
-    start = [15, 15, 4]
+    start = [-10, -10, 40]
     for i in range(400):
         point = list(start)
-        point[0] += 30*np.random.rand()
-        point[1] += 30*np.random.rand()
-        point[2] = 0.1*point[0]
+        point[0] += 240*np.random.rand()
+        point[1] += 240*np.random.rand()
+        point[2] = 0.8*point[0]
         #points.append([point[1], point[0], point[2]])
         points.append([point[0], point[1], point[2]])
     return np.array(points)
