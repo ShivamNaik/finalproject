@@ -5,7 +5,7 @@ import datetime
 
 class HAC:
     clusterLevel = 1
-
+    title = ""
     def calculateDistance(self, sample_a, sample_b):
         sum = 0
         for i in xrange(len(sample_a)):
@@ -43,6 +43,7 @@ class HAC:
     def run(self, dataMatrix, title="", show=False):  # need to figure out how to automate this
         title = 'Agglomerative Clustering ' + title
         print title
+        self.title = title
 
         start = datetime.datetime.now()
         clusters = self.runAggClustering(dataMatrix, self.clusterLevel)

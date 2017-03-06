@@ -15,7 +15,7 @@ class DBSCAN:
     minPoints = 0
     eps = 0
     calcEps = True
-
+    title = ""
     def __init__(self, calcEps = True, eps=0, min_points=4):
         self.eps = eps
         self.calcEps = calcEps
@@ -78,6 +78,7 @@ class DBSCAN:
 
     def run(self,dataMatrix, title="", show=False): #need to figure out how to automate this
         title = 'DBSCAN Clustering ' + title
+        self.title = title
         print title
         if(self.calcEps):
             self.eps = self.calculateEps(dataMatrix)

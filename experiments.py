@@ -6,6 +6,8 @@ import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.datasets import make_blobs
 from sklearn.datasets import make_gaussian_quantiles
+from plottingtools import *
+from scoring import *
 
 class ExperimentData:
     genome = []
@@ -105,31 +107,15 @@ class Experiments:
             target = open("timing", 'a')
             for i in xrange(10):
                 target.write("\n")
-        # dbscan = DBSCAN(min_points=13)
-        # hac = HAC()
-        #
-        # X1, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
-        # X2, Y2 = make_classification(n_features=2, n_redundant=0, n_informative=2)
-        #
-        # dbscan.run(X1, "1")
-        # hac.run(X2, "1")
-        # X1, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
-        # X2, Y1 = make_gaussian_quantiles(n_features=2, n_classes=3)
-        #
-        # dbscan.run(X1, "2")
-        # hac.run(X2, "2")
-        #
-        # X1, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
-        #                              n_clusters_per_class=1, n_classes=3)
-        # X2, Y1 = make_classification(n_features=2, n_redundant=0, n_informative=2,
-        #                              n_clusters_per_class=1, n_classes=3)
-        # dbscan.run(X1, "3")
-        # hac.run(X2, "3")
-        # X1, Y1 = make_blobs(n_features=2, centers=3)
-        # X2, Y1 = make_blobs(n_features=2, centers=3)
-        #
-        # dbscan.run(X1, "4")
-        # hac.run(X2, "4")
+        line = syntheticDataLine()
+        plane = syntheticPlane()
+        sphere = syntheticDataSphere()
+        n_clusters = 3
+        dat = np.concatenate((line, plane, sphere))
+        clusters = algorithm.run(dat.tolist(), "Line, Plane, Sphere")
+        print len(clusters)
+        print len(dat.tolist())
+        plotClusterData(dat, np.array(clusters), n_clusters, algorithm.title)
 
 
 def test_DBSCAN():
@@ -152,6 +138,8 @@ hac = HAC()
 experiment = Experiments()
 
 experiment.runSynthetic(dbscan)
+experiment.runSynthetic(hac)
+
 
 ind = 500
 dim = 3

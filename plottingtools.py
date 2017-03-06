@@ -19,9 +19,10 @@ import matplotlib.cm as cm
     
 '''
     
-def plotClusterData(X, clusterLabels, n_clusters):
-    colors = iter(cm.rainbow(np.linspace(0, 1, n_clusters)))
-    clusters = [[] for i in range(n_clusters)]
+def plotClusterData(X, clusterLabels, n_clusters, title):
+    colors = plt.cm.Spectral(np.linspace(0, 1, len(set(clusterLabels))))
+
+    clusters = [[] for i in range(len(clusterLabels))]
     n_samples = X.shape[0]
     for i in range(n_samples):
         point = X[i]
@@ -33,7 +34,7 @@ def plotClusterData(X, clusterLabels, n_clusters):
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
-    for j in range(n_clusters):
+    for j in clusterLabels:
         # want different color/marking for each cluster
         xs = []
         ys = []
@@ -42,8 +43,9 @@ def plotClusterData(X, clusterLabels, n_clusters):
             xs.append(pt[0])
             ys.append(pt[1])
             zs.append(pt[2])
-        ax.scatter(xs, ys, zs, c=next(colors))
-    plt.show()
+        ax.scatter(xs, ys, zs, c=colors[j])
+    plt.savefig("figure/" + title)
+#    plt.show()
 
 def syntheticData2Lines():
     points1 = []
