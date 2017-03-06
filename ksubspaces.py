@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.utils import gen_batches
 from numpy import bincount
 from sklearn.preprocessing import scale
-from experiments import *
+#from experiments import *
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
@@ -85,9 +85,13 @@ def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
         if len(cluster):
             cluster_std = scale(cluster)
             pca = PCA(n_components=2).fit(cluster_std)
+            #print len(pca)
+            #print pca.components_[0]
             aks[cluster_idx] = pca.components_[0]
+            #aks[cluster_idx] = pca[:,0]
             if len(pca.components_) > 1:
                 bks[cluster_idx] = pca.components_[1]
+                #bks[cluster_idx] = pca[:,1]
 
     inertia = 0.0
     for ind, point in enumerate(X):
@@ -111,8 +115,8 @@ def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
             linedist2 = lineDistance(point, center, eta, ak, bk, variance)
             planedist2 = planeDistance(point, center, eta, ak, bk, variance)
             spheredist2 = sphereDistance(point, center, eta, ak, bk, variance)
-            #if spheredist2==0:
-            #    spheredist2 = np.infty
+            if spheredist2==0:
+                spheredist2 = np.infty
             #print "line", linedist1, linedist2
             #print "plane", planedist, planedist2
             #print "sphere", spheredist, spheredist2
@@ -120,7 +124,7 @@ def pairwise_distances(X, Y, xsquarednorms, ysquarednorms, labels, distances):
             #if spheredist==0:
             #    spheredist = np.infty
 
-            dist = min([linedist2, planedist2])
+            dist = min([linedist2, planedist2, spheredist2])
             if min_dist == -1 or dist < min_dist:
                 min_dist = dist
                 labels[ind] = center_idx
@@ -285,18 +289,6 @@ def k_subspaces(X, n_clusters, n_init, max_iter, tol=1e-4):
             best_n_iter = n_iter_
                 
     return best_centers, best_labels, best_inertia, best_n_iter
-    
-##data = ExperimentData(limit=True, limitNum=5000)
-##outcomes = []
-##for i in range(3):
-##    print "Dataset", i
-##    dat = np.array(data.dataSets[i])
-##    ksub = KSubspaces().fit(dat)
-##    kmeans = KMeans().fit(dat)
-##    ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
-##    kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
-##    print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
-##    outcomes.append([ksubdata, kmeansdata])
 
 def kLinePlane():
     line = syntheticDataLine()
@@ -318,4 +310,18 @@ def kLinePlaneSphere():
     plotClusterData(dat, ksub.labels_, n_clusters)
     kmeans = KMeans(n_clusters=n_clusters).fit(dat)
     plotClusterData(dat, kmeans.labels_, n_clusters)
+
+def run:
+    data = ExperimentData(limit=True, limitNum=500)
+    outcomes = []
+    for i in range(3):
+        print "Dataset", i
+        dat = np.array(data.dataSets[i])
+        ksub = KSubspaces(n_init=3).fit(dat)
+        kmeans = KMeans(n_init=3).fit(dat)
+        ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
+        kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
+        print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
+        outcomes.append([ksubdata, kmeansdata])
+    
     

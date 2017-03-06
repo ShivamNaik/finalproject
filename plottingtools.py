@@ -3,18 +3,23 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
-def plotClusterData(X, clusterLabels, n_clusters):
-    '''
+'''
 
     Usage Example:
     
-    from plottingtools import *
-    dat = syntheticData2Lines()
-    ksub = KSubspaces(n_clusters=2).fit(dat)
-    plotClusterData(dat, ksub.labels_, 2)
+    line = syntheticDataLine()
+    plane = syntheticPlane()
+    sphere = syntheticDataSphere()
+    n_clusters=3
+    dat = np.concatenate((line, plane, sphere))
+    ksub = KSubspaces(n_clusters=n_clusters, n_init=5).fit(dat)
+    plotClusterData(dat, ksub.labels_, n_clusters)
+    kmeans = KMeans(n_clusters=n_clusters).fit(dat)
+    plotClusterData(dat, kmeans.labels_, n_clusters)
     
-    '''
+'''
     
+def plotClusterData(X, clusterLabels, n_clusters):
     colors = iter(cm.rainbow(np.linspace(0, 1, n_clusters)))
     clusters = [[] for i in range(n_clusters)]
     n_samples = X.shape[0]
@@ -68,30 +73,30 @@ def syntheticDataLineSphere():
 
 def syntheticDataLine():
     points2 = []
-    start2 = [8, 8, -3]
+    start2 = [-50, -50, -120]
     for i in range(50):
-        start2[0] += 0.4
-        start2[1] += 0.4
-        start2[2] -= 0.05
+        start2[0] += 6
+        start2[1] += 6
+        start2[2] += 2
         points2.append([start2[0], start2[1], start2[2]])
     return np.array(points2)
 
 def syntheticDataSphere():
     z = (2 * np.random.rand(400) - 1)
     t = 2 * np.pi * np.random.rand(400)
-    x = 5*(np.sqrt(1 - z**2) * np.cos(t))
-    y = 5*(np.sqrt(1 - z**2) * np.sin(t))
-    sphere = zip(x, y, 5*z)
+    x = 40*(np.sqrt(1 - z**2) * np.cos(t))
+    y = 40*(np.sqrt(1 - z**2) * np.sin(t))
+    sphere = zip(x, y, 40*z)
     return np.array(sphere)
 
 def syntheticPlane():
     points = []
-    start = [15, 15, 4]
+    start = [-25, -25, 60]
     for i in range(400):
         point = list(start)
-        point[0] += 30*np.random.rand()
-        point[1] += 30*np.random.rand()
-        point[2] = 0.1*point[0]
+        point[0] += 240*np.random.rand()
+        point[1] += 240*np.random.rand()
+        point[2] = (0.8*point[0])+100
         #points.append([point[1], point[0], point[2]])
         points.append([point[0], point[1], point[2]])
     return np.array(points)
