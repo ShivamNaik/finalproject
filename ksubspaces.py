@@ -5,18 +5,20 @@ from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.utils import gen_batches
 from numpy import bincount
 from sklearn.preprocessing import scale
-#from experiments import *
+from experiments import *
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 from plottingtools import *
+import datetime
+from scoring import *
 
 # eta should be between 0.2 and 0.5
-eta = 0.35
+eta = 0.2
 
 class KSubspaces:
 
-    def __init__(self, n_clusters=8, n_init=3,
+    def __init__(self, n_clusters=5, n_init=3,
                  max_iter=300, tol=1e-4):
 
         self.n_clusters = n_clusters
@@ -311,17 +313,47 @@ def kLinePlaneSphere():
     kmeans = KMeans(n_clusters=n_clusters).fit(dat)
     plotClusterData(dat, kmeans.labels_, n_clusters)
 
-def run:
+def run(outcomes):
     data = ExperimentData(limit=True, limitNum=500)
-    outcomes = []
-    for i in range(3):
+    for i in range(4):
+        title = data.labels[i]
         print "Dataset", i
         dat = np.array(data.dataSets[i])
+        start = datetime.datetime.now()
         ksub = KSubspaces(n_init=3).fit(dat)
+        end = datetime.datetime.now()
+        start2 = datetime.datetime.now()
         kmeans = KMeans(n_init=3).fit(dat)
-        ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksub.n_iter_)
-        kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeans.n_iter_)
-        print "Dataset", i, "Ksub:", ksub.inertia_, "Kmeans", kmeans.inertia_
+        end2 = datetime.datetime.now()
+
+        ksubscore = score(dat, ksub.cluster_centers_, ksub.labels_)
+        kmeanscore = score(dat, kmeans.cluster_centers_, kmeans.labels_)
+        
+        ksubdata = (ksub.cluster_centers_, ksub.labels_, ksub.inertia_, ksubscore)
+        kmeansdata = (kmeans.cluster_centers_, kmeans.labels_, kmeans.inertia_, kmeanscore)
+        print "Dataset", i, "Ksub:", ksubscore, "Kmeans", kmeanscore
         outcomes.append([ksubdata, kmeansdata])
+
+        
+        print "KSub start, end, end-start", start, end, end-start
+        print "KMeans start, end, end-start", start2, end2, end2-start2
+        with open("timing_corinne.txt", "a") as target:
+            newline = "\n"
+            target.write(title + newline)
+            target.write("KSub" + newline)
+            target.write(str(start)+ newline)
+            target.write(str(end)+ newline)
+            target.write(str(end - start)+ newline)
+            target.write("KMeans" + newline)
+            target.write(str(start)+ newline)
+            target.write(str(end)+ newline)
+            target.write(str(end - start)+ newline)
+            
+    return outcomes
+
+
+outcomes = []
+run(outcomes)
+            
     
     
