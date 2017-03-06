@@ -4,6 +4,9 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -127,7 +130,54 @@ The algorithm starts by assigning a cluster id to each sample. We go through eac
 
 \textbf{K-Subspaces on Synthetic Data}
 
- For our synthetic data, we wanted to demonstrate the ability to cluster for a variety of shapes. Data includes 1D lines, 2D planes, and 3D spheres, and the goal is for K-subspaces to cluster those shapes together separately even when they are close together. 
+For our synthetic data, we ran a very similar synthetic experiment to the one presented in the 2009 paper. We wanted to demonstrate the ability of K-subspaces to cluster for a variety of shapes. Data includes 1D lines, 2D planes, and 3D spheres, and the goal is for K-Subspaces to cluster those shapes together separately even when they are close together. We are comparing the performance with scikit-learn's implementation of K-Means. 
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{ksubfigures/2lines.png}
+        \caption{Original Data}
+        \label{fig:2lines}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{ksubfigures/2lineskmeans.png}
+        \caption{K-Means}
+        \label{fig:kmeans}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{ksubfigures/2linesksub.png}
+        \caption{K-Subspaces}
+        \label{fig:ksub}
+    \end{subfigure}
+    \caption{Performance on two 1-D Subspaces}\label{fig:2lineswhole}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{ksubfigures/2lines.png}
+        \caption{Original Data}
+        \label{fig:2lines}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{ksubfigures/2lineskmeans.png}
+        \caption{K-Means}
+        \label{fig:kmeans}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{ksubfigures/2linesksub.png}
+        \caption{K-Subspaces}
+        \label{fig:ksub}
+    \end{subfigure}
+    \caption{Performance on two 1-D Subspaces}\label{fig:2lineswhole}
+\end{figure}
+
+
 
 
 
