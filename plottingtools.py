@@ -59,3 +59,43 @@ def syntheticData2Lines():
     l = points1
     l.extend(points2)
     return np.array(l)
+
+def syntheticDataLineSphere():
+    line = syntheticDataLine()
+    sphere = syntheticDataSphere()
+    dataset = [line, sphere]
+    plotDataList(dataset)
+
+def syntheticDataLine():
+    points2 = []
+    start2 = [5, 0, 0]
+    for i in range(50):
+        start2[0] += 0.5
+        start2[1] += 0.5
+        start2[2] -= 0.1
+        points2.append([start2[0], start2[1], start2[2]])
+    return np.array(points2)
+
+def syntheticDataSphere():
+    z = 2 * np.random.rand(400) - 1
+    t = 2 * np.pi * np.random.rand(400)
+    x = np.sqrt(1 - z**2) * np.cos(t)
+    y = np.sqrt(1 - z**2) * np.sin(t)
+    sphere = zip(x, y, z)
+    return np.array(sphere)
+
+def plotDataList(dataset):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    
+    n_clusters = len(dataset)
+    colors = iter(cm.rainbow(np.linspace(0, 1, n_clusters)))
+    for data in dataset:
+        x = data[:,0]
+        y = data[:,1]
+        z = data[:,2]
+        ax.scatter(x,y,z)
+    plt.show()
